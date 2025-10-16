@@ -1,0 +1,24 @@
+version: 2
+
+models:
+  - name: int_jaffles__orders_joined
+    description: "Comprehensive view of jaffle orders with all related data joined"
+    columns:
+      - name: order_id
+        description: "Unique identifier for orders"
+        tests:
+          - not_null
+
+  - name: int_flowers__orders_joined
+    description: "Comprehensive view of flower orders with all related data joined"
+    columns:
+      - name: flower_order_id
+        description: "Unique identifier for flower orders"
+        tests:
+          - not_null
+      - name: delivery_status
+        description: "Status of delivery"
+        tests:
+          - accepted_values:
+              arguments:
+                values: ['pending', 'delivered', 'in_transit']

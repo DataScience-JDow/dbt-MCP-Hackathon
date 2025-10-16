@@ -1,0 +1,35 @@
+version: 2
+
+sources:
+
+  - name: raw_data
+    description: Raw data from source database tables
+    schema: "{{ var('raw_schema', target.schema) }}"
+    tables:
+      # Jaffle data
+      - name: raw_customers
+        description: Customer information for jaffle shop
+      - name: raw_orders
+        description: Order data for jaffle shop
+      - name: raw_items
+        description: Individual items in orders for jaffle shop
+      - name: raw_products
+        description: Product catalog for jaffle shop
+      - name: raw_stores
+        description: Store information for jaffle shop
+
+      # Flower shop data
+      - name: raw_flowers
+        description: Individual flower inventory
+      - name: raw_flower_orders
+        description: Flower arrangement orders
+      - name: raw_flower_arrangements
+        description: Predefined flower arrangements
+      - name: raw_delivery_info
+        description: Delivery information for flower orders
+      - name: raw_supplies
+        description: Flower supplier information
+
+      # Additional data
+      - name: raw_tweets
+        description: Social media data

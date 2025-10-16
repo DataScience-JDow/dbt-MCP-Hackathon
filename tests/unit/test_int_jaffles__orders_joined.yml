@@ -1,0 +1,23 @@
+unit_tests:
+  - name: test_int_jaffle__orders_joined_basic_join
+    description: "Test that intermediate model correctly joins order, customer, and store data"
+    model: int_jaffles__orders_joined
+    given:
+      - input: ref('stg_jaffle__orders')
+        rows:
+          - {order_id: "order-001", customer_id: "cust-001", ordered_at: "2023-01-01T10:00:00", store_id: "store-001", subtotal: 1000, tax_paid: 100, order_total: 1100}
+      - input: ref('stg_jaffle__customers')
+        rows:
+          - {customer_id: "cust-001", customer_name: "John Doe"}
+      - input: ref('stg_jaffle__stores')
+        rows:
+          - {store_id: "store-001", store_name: "Main Store", opened_at: "2020-01-01", tax_rate: 0.10}
+      - input: ref('stg_jaffle__items')
+        rows:
+          - {order_id: "order-001", product_sku: "SKU-001", product_name: "Coffee", product_type: "BEVERAGE", price: 500, description: "Hot coffee"}
+      - input: ref('stg_jaffle__products')
+        rows:
+          - {product_sku: "SKU-001", product_name: "Premium Coffee", product_type: "BEVERAGE", price: 500, description: "Premium hot coffee"}
+    expect:
+      rows:
+        - {order_id: "order-001", customer_id: "cust-001", customer_name: "John Doe", ordered_at: "2023-01-01T10:00:00", store_id: "store-001", store_name: "Main Store", store_opened_at: "2020-01-01", store_tax_rate: 0.10, subtotal: 1000, tax_paid: 100, order_total: 1100, product_sku: "SKU-001", item_name: "Coffee", item_type: "BEVERAGE", item_price: 500, item_description: "Hot coffee", product_name: "Premium Coffee", product_type: "BEVERAGE", product_price: 500, product_description: "Premium hot coffee"}

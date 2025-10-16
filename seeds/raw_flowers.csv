@@ -1,0 +1,11 @@
+flower_id,flower_name,color,price_per_stem,supplier_id,seasonal_availability,care_difficulty,lifespan_days
+FLW-001,Red Rose,red,450,SUP-001,year_round,medium,7
+FLW-002,White Rose,white,400,SUP-001,year_round,medium,7
+FLW-003,Yellow Tulip,yellow,325,SUP-002,spring,low,5
+FLW-004,Pink Tulip,pink,350,SUP-002,spring,low,5
+FLW-005,Sunflower,yellow,500,SUP-003,summer,low,9
+FLW-006,White Lily,white,600,SUP-001,year_round,high,6
+FLW-007,Purple Iris,purple,475,SUP-004,spring,medium,4
+FLW-008,Orange Marigold,orange,250,SUP-005,fall,low,8
+FLW-009,Pink Carnation,pink,300,SUP-002,year_round,low,10
+FLW-010,White Chrysanthemum,white,375,SUP-006,fall,medium,12

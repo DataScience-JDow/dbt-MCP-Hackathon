@@ -1,0 +1,273 @@
+semantic_models:
+  - name: jaffle_orders
+    description: Jaffle shop order-level data
+    model: ref('fct_jaffle_orders')
+    defaults:
+      agg_time_dimension: ordered_at
+
+    entities:
+      - name: order
+        type: primary
+        expr: order_id
+      - name: customer
+        type: foreign
+        expr: customer_id
+      - name: store
+        type: foreign
+        expr: store_id
+
+    dimensions:
+      - name: ordered_at
+        type: time
+        type_params:
+          time_granularity: day
+      - name: store_name
+        type: categorical
+      - name: item_type
+        type: categorical
+      - name: item_name
+        type: categorical
+
+    measures:
+      - name: order_total
+        agg: sum
+        description: Total order value including tax
+      - name: subtotal
+        agg: sum
+        description: Order subtotal before tax
+      - name: tax_paid
+        agg: sum
+        description: Tax amount paid
+      - name: jaffle_order_count
+        agg: count_distinct
+        expr: order_id
+        description: Count of unique jaffle orders
+      - name: jaffle_avg_order_value
+        agg: average
+        expr: order_total
+        description: Average jaffle order value
+
+  - name: flower_orders
+    description: Flower shop order-level data
+    model: ref('fct_flower_orders')
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: flower_order
+        type: primary
+        expr: flower_order_id
+      - name: arrangement
+        type: foreign
+        expr: arrangement_id
+
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: delivery_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: size_category
+        type: categorical
+      - name: occasion_type
+        type: categorical
+      - name: delivery_status
+        type: categorical
+      - name: delivery_city
+        type: categorical
+      - name: delivery_state
+        type: categorical
+      - name: is_custom
+        type: categorical
+
+    measures:
+      - name: total_amount
+        agg: sum
+        description: Total order amount before delivery and discounts
+      - name: delivery_fee
+        agg: sum
+        description: Total delivery fees
+      - name: discount_amount
+        agg: sum
+        description: Total discount amount
+      - name: final_amount
+        agg: sum
+        description: Final amount after delivery fee and discount
+      - name: flower_order_count
+        agg: count_distinct
+        expr: flower_order_id
+        description: Count of unique flower orders
+      - name: flower_avg_order_value
+        agg: average
+        expr: final_amount
+        description: Average flower order value
+
+  - name: customer_lifetime_value
+    description: Customer lifetime value metrics
+    model: ref('fct_customer_lifetime_value')
+    defaults:
+      agg_time_dimension: first_order_date
+
+    entities:
+      - name: customer
+        type: primary
+        expr: customer_key
+
+    dimensions:
+      - name: first_order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: last_order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: source
+        type: categorical
+        description: Business source (jaffle or flower)
+
+    measures:
+      - name: total_revenue
+        agg: sum
+        description: Total customer lifetime revenue
+      - name: ltv_customer_count
+        agg: count_distinct
+        expr: customer_key
+        description: Count of unique customers
+      - name: avg_customer_ltv
+        agg: average
+        expr: total_revenue
+        description: Average customer lifetime value
+      - name: total_customer_orders
+        agg: sum
+        expr: order_count
+        description: Total orders across all customers
+
+  - name: daily_revenue
+    description: Daily aggregated revenue by business
+    model: ref('agg_daily_revenue')
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: daily_business
+        type: primary
+        expr: "order_date || '_' || business"
+
+    dimensions:
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day
+      - name: business
+        type: categorical
+        description: Business type (jaffle or flower)
+
+    measures:
+      - name: revenue
+        agg: sum
+        description: Total daily revenue
+      - name: order_count
+        agg: sum
+        description: Total order count
+      - name: customer_count
+        agg: sum
+        description: Unique customer count
+
+metrics:
+  # Jaffle Shop Metrics
+  - name: jaffle_revenue
+    description: Total revenue from Jaffle shop orders
+    type: simple
+    label: Jaffle Revenue
+    type_params:
+      measure:
+        name: order_total
+        join_to_timespine: true
+
+  - name: jaffle_order_count
+    description: Count of Jaffle shop orders
+    type: simple
+    label: Jaffle Order Count
+    type_params:
+      measure:
+        name: jaffle_order_count
+        join_to_timespine: true
+
+  - name: jaffle_avg_order_value_metric
+    description: Average order value for Jaffle orders
+    type: simple
+    label: Jaffle Avg Order Value
+    type_params:
+      measure:
+        name: jaffle_avg_order_value
+        join_to_timespine: true
+
+  # Flower Shop Metrics
+  - name: flower_revenue
+    description: Total revenue from Flower shop orders (including delivery, minus discounts)
+    type: simple
+    label: Flower Revenue
+    type_params:
+      measure:
+        name: final_amount
+        join_to_timespine: true
+
+  - name: flower_order_count_metric
+    description: Count of Flower shop orders
+    type: simple
+    label: Flower Order Count
+    type_params:
+      measure:
+        name: flower_order_count
+        join_to_timespine: true
+
+  - name: flower_avg_order_value_metric
+    description: Average order value for Flower orders
+    type: simple
+    label: Flower Avg Order Value
+    type_params:
+      measure:
+        name: flower_avg_order_value
+        join_to_timespine: true
+
+  # Combined Business Metrics
+  - name: total_revenue
+    description: Total revenue across both businesses
+    type: simple
+    label: Total Revenue
+    type_params:
+      measure:
+        name: revenue
+        join_to_timespine: true
+
+  - name: total_orders
+    description: Total order count across both businesses
+    type: simple
+    label: Total Orders
+    type_params:
+      measure:
+        name: order_count
+        join_to_timespine: true
+
+  # Customer Metrics
+  - name: avg_customer_lifetime_value
+    description: Average customer lifetime value
+    type: simple
+    label: Average Customer LTV
+    type_params:
+      measure:
+        name: avg_customer_ltv
+        join_to_timespine: true
+
+  - name: total_customers
+    description: Total unique customers
+    type: simple
+    label: Total Customers
+    type_params:
+      measure:
+        name: ltv_customer_count
+        join_to_timespine: true

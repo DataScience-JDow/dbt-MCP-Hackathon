@@ -1,0 +1,63 @@
+version: 2
+
+models:
+  - name: stg_jaffle__customers
+    description: "Cleaned customer data from jaffle shop"
+    columns:
+      - name: customer_id
+        description: "Unique identifier for customers"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_jaffle__orders
+    description: "Cleaned order data from jaffle shop"
+    columns:
+      - name: order_id
+        description: "Unique identifier for orders"
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Foreign key to customers"
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle__customers')
+                field: customer_id
+
+  - name: stg_jaffle__stores
+    description: "Cleaned store data from jaffle shop"
+    columns:
+      - name: store_id
+        description: "Unique identifier for stores"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_jaffle__products
+    description: "Cleaned product data from jaffle shop"
+    columns:
+      - name: product_sku
+        description: "Unique product SKU"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_jaffle__items
+    description: "Cleaned order items data from jaffle shop"
+    columns:
+      - name: order_id
+        description: "Foreign key to orders"
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle__orders')
+                field: order_id
+      - name: product_sku
+        description: "Foreign key to products"
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_jaffle__products')
+                field: product_sku

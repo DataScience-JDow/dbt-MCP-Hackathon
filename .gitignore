@@ -1,0 +1,12 @@
+
+target/
+dbt_packages/
+logs/
+*.duckdb
+.claude
+dbt_internal_packages/
+.vscode/
+.kiro/
+.env
+.comp
+target_prod

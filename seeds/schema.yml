@@ -1,0 +1,22 @@
+version: 2
+
+seeds:
+  - name: raw_flower_arrangements
+    config:
+      column_types:
+        arrangement_id: varchar
+        arrangement_name: varchar
+        description: varchar
+        base_price: integer
+        flower_ids: varchar
+        flower_quantities: varchar
+        size: varchar
+        occasion_type: varchar
+        is_custom: boolean
+  - name: raw_tweets
+    config:
+      column_types:
+        id: varchar
+        user_id: varchar
+        tweeted_at: varchar
+        content: "{{ 'varchar(1000)' if target.type == 'redshift' else 'varchar' }}"

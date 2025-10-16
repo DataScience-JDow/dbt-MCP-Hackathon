@@ -1,0 +1,8 @@
+jaffle_and_flower_shop:
+
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'jaffle_and_flower_shop.duckdb'
+      threads: 24

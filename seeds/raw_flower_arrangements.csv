@@ -1,0 +1,6 @@
+arrangement_id,arrangement_name,description,base_price,flower_ids,flower_quantities,size,occasion_type,is_custom
+38ceb375-da87-49af-8ffb-aa6cbc1187fc,Classic Dozen Roses,Twelve beautiful red roses in a classic arrangement,7500,FLW-001,12,large,romantic,False
+40446816-e765-41e8-a72d-fc54a9e5ffc5,Spring Tulip Bouquet,Mixed tulips in spring colors,4500,"FLW-003,FLW-004","6,6",medium,spring,False
+17d6fec4-ff45-4679-a504-b2db016a9c41,Sympathy Arrangement,White lilies and chrysanthemums for memorial services,6500,"FLW-006,FLW-010","4,8",large,funeral,False
+054cd425-f040-48a5-80e7-fb14f0f7b2b7,Birthday Bright Mix,Colorful mix of seasonal flowers,3500,"FLW-005,FLW-007,FLW-009","3,3,4",medium,birthday,False
+97e6731d-2b41-4482-9210-66789990fe75,Small Thank You Bouquet,Simple carnation arrangement to say thanks,2500,FLW-009,8,small,thank_you,False

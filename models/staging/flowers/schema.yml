@@ -1,0 +1,58 @@
+version: 2
+
+models:
+  - name: stg_flower_shop__flowers
+    description: "Cleaned flower inventory data"
+    columns:
+      - name: flower_id
+        description: "Unique identifier for flowers"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_flower_shop__flower_orders
+    description: "Cleaned flower order data"
+    columns:
+      - name: flower_order_id
+        description: "Unique identifier for flower orders"
+        tests:
+          - unique
+          - not_null
+      - name: arrangement_id
+        description: "Foreign key to flower arrangements"
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_flower_shop__flower_arrangements')
+                field: arrangement_id
+      - name: delivery_id
+        description: "Foreign key to delivery information"
+        tests:
+          - relationships:
+              arguments:
+                to: ref('stg_flower_shop__delivery_info')
+                field: delivery_id
+
+  - name: stg_flower_shop__flower_arrangements
+    description: "Cleaned flower arrangement data"
+    columns:
+      - name: arrangement_id
+        description: "Unique identifier for arrangements"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_flower_shop__delivery_info
+    description: "Cleaned delivery information data"
+    columns:
+      - name: delivery_id
+        description: "Unique identifier for deliveries"
+        tests:
+          - unique
+          - not_null
+
+  - name: stg_flower_shop__supplies
+    description: "Cleaned supply data"
+    columns:
+      - name: supply_id
+        description: "Supply identifier (may have duplicates)"
