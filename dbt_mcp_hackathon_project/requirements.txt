@@ -4,11 +4,10 @@ dbt-core>=1.6.0
 dbt-duckdb>=1.6.0
 
 # MCP server dependencies
-fastapi>=0.104.0
+mcp>=1.0.0
+fastapi>=0.104.0  # Keep for backward compatibility during transition
 uvicorn>=0.24.0
 websockets>=12.0
-# mcp>=0.1.0  # Future: Official MCP protocol support
-# mcp-server>=0.1.0
 
 # Data processing and visualization
 pandas>=2.0.0
