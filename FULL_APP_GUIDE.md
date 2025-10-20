@@ -1,6 +1,14 @@
 # 🚀 dbt MCP Hackathon Project Full Application Guide
 
-## Quick Start (Full AI Generation)
+*Now featuring real ChatGPT integration alongside pattern-based AI!*
+
+## Quick Start Options
+
+### Option A: With ChatGPT (Recommended)
+For the full AI experience with sophisticated model generation.
+
+### Option B: Pattern-Based Only
+For reliable, fast generation without external API dependencies.
 
 ### 1. Install Dependencies
 ```bash
@@ -29,6 +37,16 @@ python health_check.py
 ```bash
 pip install -r dbt_mcp_hackathon_project/requirements.txt
 pip install dbt-core dbt-duckdb
+```
+
+### Step 1.5: Setup ChatGPT (Optional but Recommended)
+```bash
+# Get API key from https://platform.openai.com/api-keys
+# Create .env file
+echo "OPENAI_API_KEY=your-api-key-here" > .env
+
+# Test integration
+python test_chatgpt_integration.py
 ```
 
 ### Step 2: Setup dbt Profile

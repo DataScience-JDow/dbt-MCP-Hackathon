@@ -3,6 +3,10 @@ Configuration settings for dbt MCP Hackathon Project
 """
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 from typing import Optional
 
 class Config:

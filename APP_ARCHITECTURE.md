@@ -176,11 +176,11 @@ To convert this to actual MCP protocol, we'd need to:
 
 ### What We Actually Built vs. What We Called It
 
-**Our "AI Service":**
-- ✅ **What it is**: Sophisticated pattern recognition + SQL templates
-- ✅ **What it does**: Generates valid dbt SQL from natural language
-- ❌ **What it's not**: Connected to OpenAI, Claude, or any LLM API
-- 🎯 **Why this works**: Predictable, fast, and perfect for demos
+**Our Dual AI System:**
+- ✅ **ChatGPT Integration**: Real OpenAI GPT-4 for sophisticated SQL generation
+- ✅ **Pattern-Based Fallback**: Sophisticated pattern recognition + SQL templates
+- ✅ **Hybrid Approach**: Automatically selects best available AI service
+- 🎯 **Why this works**: Best of both worlds - quality when available, reliability always
 
 **Our "MCP Server":**
 - ✅ **What it is**: Custom FastAPI server with MCP-inspired endpoints
@@ -188,19 +188,25 @@ To convert this to actual MCP protocol, we'd need to:
 - ❌ **What it's not**: Official MCP protocol implementation
 - 🎯 **Why this works**: Faster to build, easier to debug, same user experience
 
-**The Pattern-Based "AI" Magic:**
+**The Dual AI System in Action:**
 ```python
 # User says: "Create a daily revenue model"
-# Our system:
+
+# With ChatGPT (when available):
+1. Send comprehensive prompt to OpenAI GPT-4
+2. Include full dbt project context and best practices
+3. Receive sophisticated, context-aware SQL
+4. Result: High-quality model in 3-5 seconds (~$0.03)
+
+# Pattern-Based Fallback:
 1. Regex patterns identify: intent=AGGREGATE, tables=[orders, products]
 2. Template engine generates: proper dbt SQL with {{ ref() }}
-3. Result: Working model in 200ms, no API costs
+3. Result: Good model in 200ms, no API costs
 
-# Real AI would:
-1. Send prompt to OpenAI API ($$$)
-2. Wait 2-5 seconds for response
-3. Parse and validate generated SQL
-4. Result: Same working model, but slower and more expensive
+# Hybrid Intelligence:
+- Tries ChatGPT first for best quality
+- Falls back to patterns if ChatGPT unavailable
+- User gets best possible result automatically
 ```
 
 ## 🧰 Technology Choices: Why We Picked What We Picked
@@ -252,7 +258,7 @@ python health_check.py  # Verifies everything is working
 ## 🔮 What's Next: The Roadmap Forward
 
 ### Immediate Improvements (Next Sprint)
-- **Real AI Integration**: Replace pattern-based system with OpenAI/Claude APIs
+- ✅ **Real AI Integration**: ChatGPT integration complete!
 - **Actual MCP Protocol**: Implement official MCP server for AI agent compatibility
 - **Enhanced Model Types**: Support for tests, macros, and snapshots
 - **Better Visualizations**: Model lineage graphs and data profiling
