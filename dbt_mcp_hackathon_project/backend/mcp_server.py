@@ -15,6 +15,7 @@ from ..shared.models import ModelMetadata, ErrorResponse, ModelGenerationRequest
 from .model_service import ModelMetadataService
 from .prompt_processor import PromptProcessor
 from .ai_service import KiroAIService
+from .chatgpt_service import ChatGPTService
 from .model_generator import ModelFileManager
 from .compilation_service import DBTCompilationExecutionService, CompilationResult, ExecutionResult
 
@@ -140,6 +141,33 @@ class MCPServer:
                 )
             except Exception as e:
                 logger.error(f"Health check failed: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.get("/ai-status")
+        async def get_ai_status():
+            """Get status of AI services"""
+            try:
+                chatgpt_available = hasattr(self, 'chatgpt_service') and self.chatgpt_service.is_available()
+                pattern_ai_available = hasattr(self, 'ai_service') and self.ai_service is not None
+                
+                status = {
+                    "chatgpt": {
+                        "available": chatgpt_available,
+                        "model": "gpt-4" if chatgpt_available else None,
+                        "status": "ready" if chatgpt_available else "not configured"
+                    },
+                    "pattern_ai": {
+                        "available": pattern_ai_available,
+                        "status": "ready" if pattern_ai_available else "not initialized"
+                    },
+                    "recommended": "chatgpt" if chatgpt_available else "pattern_ai",
+                    "default_endpoint": "/generate"
+                }
+                
+                return status
+                
+            except Exception as e:
+                logger.error(f"AI status check failed: {e}")
                 raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.get("/manifest-info")
@@ -394,38 +422,49 @@ class MCPServer:
         
         @self.app.post("/generate", response_model=SQLGenerationResponse)
         async def generate_sql(request: ModelGenerationRequest):
-            """Generate SQL code from natural language prompt without creating files"""
+            """Generate SQL code from natural language prompt (uses ChatGPT if available)"""
             try:
+                # Try ChatGPT first if available
+                if hasattr(self, 'chatgpt_service') and self.chatgpt_service.is_available():
+                    return await self._generate_with_chatgpt(request)
+                
+                # Fallback to pattern-based AI
                 if not all([self.prompt_processor, self.ai_service]):
                     raise HTTPException(status_code=500, detail="AI services not initialized")
                 
-                # Analyze the prompt
-                analysis = self.prompt_processor.analyze_prompt(request.prompt)
-                
-                # Override analysis with request parameters if provided
-                if request.output_name:
-                    analysis.output_name = request.output_name
-                if request.materialization:
-                    analysis.materialization = request.materialization
-                if request.description:
-                    analysis.description = request.description
-                
-                # Generate SQL using AI service
-                sql_result = self.ai_service.generate_sql_from_analysis(analysis, request.prompt)
-                
-                return SQLGenerationResponse(
-                    success=True,
-                    sql=sql_result.sql,
-                    model_name=sql_result.model_name,
-                    description=sql_result.description,
-                    materialization=sql_result.materialization,
-                    confidence=sql_result.confidence,
-                    reasoning=sql_result.reasoning,
-                    warnings=sql_result.warnings
-                )
+                return await self._generate_with_pattern_ai(request)
                 
             except Exception as e:
                 logger.error(f"Failed to generate SQL: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.post("/generate-chatgpt", response_model=SQLGenerationResponse)
+        async def generate_sql_chatgpt(request: ModelGenerationRequest):
+            """Generate SQL code using ChatGPT specifically"""
+            try:
+                if not hasattr(self, 'chatgpt_service') or not self.chatgpt_service.is_available():
+                    raise HTTPException(
+                        status_code=503, 
+                        detail="ChatGPT service not available. Please configure OPENAI_API_KEY."
+                    )
+                
+                return await self._generate_with_chatgpt(request)
+                
+            except Exception as e:
+                logger.error(f"Failed to generate SQL with ChatGPT: {e}")
+                raise HTTPException(status_code=500, detail=str(e))
+        
+        @self.app.post("/generate-pattern", response_model=SQLGenerationResponse)
+        async def generate_sql_pattern(request: ModelGenerationRequest):
+            """Generate SQL code using pattern-based AI specifically"""
+            try:
+                if not all([self.prompt_processor, self.ai_service]):
+                    raise HTTPException(status_code=500, detail="Pattern-based AI services not initialized")
+                
+                return await self._generate_with_pattern_ai(request)
+                
+            except Exception as e:
+                logger.error(f"Failed to generate SQL with pattern AI: {e}")
                 raise HTTPException(status_code=500, detail=str(e))
         
         @self.app.post("/validate", response_model=ValidationResponse)
@@ -672,9 +711,19 @@ class MCPServer:
         try:
             if self.model_service and self.model_service.manifest:
                 self.prompt_processor = PromptProcessor(self.model_service)
-                self.ai_service = KiroAIService()
+                
+                # Initialize both AI services
+                self.ai_service = KiroAIService()  # Pattern-based fallback
+                self.chatgpt_service = ChatGPTService(self.config)  # Real AI
+                
                 self.model_generator = ModelFileManager(self.config)
                 logger.info("AI services initialized successfully")
+                
+                # Log which AI service is available
+                if self.chatgpt_service.is_available():
+                    logger.info("ChatGPT service is available and will be used for generation")
+                else:
+                    logger.info("ChatGPT service not available, using pattern-based AI")
             else:
                 logger.warning("AI services not initialized - dbt manifest not available")
             
@@ -684,6 +733,61 @@ class MCPServer:
             
         except Exception as e:
             logger.error(f"Failed to initialize services: {e}")
+    
+    async def _generate_with_chatgpt(self, request: ModelGenerationRequest) -> SQLGenerationResponse:
+        """Generate SQL using ChatGPT service"""
+        
+        # Build context for ChatGPT
+        context = {
+            "materialization": request.materialization or "view",
+            "business_area": getattr(request, 'business_context', ''),
+            "requirements": request.description
+        }
+        
+        # Call ChatGPT service
+        result = await self.chatgpt_service.generate_sql(request.prompt, context)
+        
+        if result["success"]:
+            return SQLGenerationResponse(
+                success=True,
+                sql=result["sql"],
+                model_name=result["model_name"],
+                description=result["description"],
+                materialization=result["materialization"],
+                confidence=result["confidence"],
+                reasoning=result["reasoning"],
+                warnings=result.get("warnings", [])
+            )
+        else:
+            raise HTTPException(status_code=500, detail=result["error"])
+    
+    async def _generate_with_pattern_ai(self, request: ModelGenerationRequest) -> SQLGenerationResponse:
+        """Generate SQL using pattern-based AI service"""
+        
+        # Analyze the prompt
+        analysis = self.prompt_processor.analyze_prompt(request.prompt)
+        
+        # Override analysis with request parameters if provided
+        if request.output_name:
+            analysis.output_name = request.output_name
+        if request.materialization:
+            analysis.materialization = request.materialization
+        if request.description:
+            analysis.description = request.description
+        
+        # Generate SQL using pattern-based AI service
+        sql_result = self.ai_service.generate_sql_from_analysis(analysis, request.prompt)
+        
+        return SQLGenerationResponse(
+            success=True,
+            sql=sql_result.sql,
+            model_name=sql_result.model_name,
+            description=sql_result.description,
+            materialization=sql_result.materialization,
+            confidence=sql_result.confidence,
+            reasoning=sql_result.reasoning,
+            warnings=sql_result.warnings
+        )
     
     def get_app(self) -> FastAPI:
         """Get the FastAPI application instance"""
