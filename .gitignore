@@ -10,3 +10,5 @@ dbt_internal_packages/
 .env
 .comp
 target_prod
+__pycache__/
+*.pyc
