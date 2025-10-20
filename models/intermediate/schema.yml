@@ -6,19 +6,162 @@ models:
     columns:
       - name: order_id
         description: "Unique identifier for orders"
+        data_type: integer
         tests:
           - not_null
+      - name: customer_id
+        description: "Identifier for the customer"
+        data_type: integer
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: ordered_at
+        description: "Timestamp when the order was placed"
+        data_type: timestamp
+      - name: store_id
+        description: "Identifier for the store"
+        data_type: integer
+      - name: store_name
+        description: "Name of the store"
+        data_type: varchar
+      - name: store_opened_at
+        description: "Date when the store opened"
+        data_type: date
+      - name: store_tax_rate
+        description: "Tax rate for the store"
+        data_type: decimal
+      - name: subtotal
+        description: "Subtotal before tax"
+        data_type: decimal
+      - name: tax_paid
+        description: "Amount of tax paid"
+        data_type: decimal
+      - name: order_total
+        description: "Total amount for the order"
+        data_type: decimal
+      - name: product_sku
+        description: "Stock keeping unit for the product"
+        data_type: varchar
+      - name: item_name
+        description: "Name of the item ordered"
+        data_type: varchar
+      - name: item_type
+        description: "Type/category of the item"
+        data_type: varchar
+      - name: item_price
+        description: "Price of the individual item"
+        data_type: decimal
+      - name: item_description
+        description: "Description of the item"
+        data_type: varchar
+      - name: product_name
+        description: "Name of the product"
+        data_type: varchar
+      - name: product_type
+        description: "Type/category of the product"
+        data_type: varchar
+      - name: product_price
+        description: "Price of the product"
+        data_type: decimal
+      - name: product_description
+        description: "Description of the product"
+        data_type: varchar
 
   - name: int_flowers__orders_joined
     description: "Comprehensive view of flower orders with all related data joined"
     columns:
       - name: flower_order_id
         description: "Unique identifier for flower orders"
+        data_type: varchar
         tests:
           - not_null
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: customer_email
+        description: "Email address of the customer"
+        data_type: varchar
+      - name: customer_phone
+        description: "Phone number of the customer"
+        data_type: varchar
+      - name: arrangement_id
+        description: "Identifier for the flower arrangement"
+        data_type: varchar
+      - name: arrangement_name
+        description: "Name of the flower arrangement"
+        data_type: varchar
+      - name: arrangement_description
+        description: "Description of the flower arrangement"
+        data_type: varchar
+      - name: arrangement_base_price
+        description: "Base price of the arrangement"
+        data_type: decimal
+      - name: size_category
+        description: "Size category of the arrangement"
+        data_type: varchar
+      - name: occasion_type
+        description: "Type of occasion for the arrangement"
+        data_type: varchar
+      - name: is_custom
+        description: "Whether the arrangement is custom made"
+        data_type: boolean
+      - name: quantity
+        description: "Quantity of arrangements ordered"
+        data_type: integer
+      - name: total_amount
+        description: "Total amount for the arrangements"
+        data_type: decimal
+      - name: delivery_id
+        description: "Identifier for delivery information"
+        data_type: varchar
+      - name: delivery_address
+        description: "Street address for delivery"
+        data_type: varchar
+      - name: delivery_city
+        description: "City for delivery"
+        data_type: varchar
+      - name: delivery_state
+        description: "State for delivery"
+        data_type: varchar
+      - name: delivery_zipcode
+        description: "ZIP code for delivery"
+        data_type: varchar
+      - name: delivery_date
+        description: "Date of delivery"
+        data_type: date
+      - name: delivery_time
+        description: "Time of delivery"
+        data_type: time
+      - name: delivery_instructions
+        description: "Special delivery instructions"
+        data_type: varchar
       - name: delivery_status
         description: "Status of delivery"
+        data_type: varchar
         tests:
           - accepted_values:
-              arguments:
-                values: ['pending', 'delivered', 'in_transit']
+              values: ['pending', 'delivered', 'in_transit']
+      - name: delivery_fee
+        description: "Fee charged for delivery"
+        data_type: decimal
+      - name: recipient_name
+        description: "Name of the delivery recipient"
+        data_type: varchar
+      - name: recipient_phone
+        description: "Phone number of the delivery recipient"
+        data_type: varchar
+      - name: occasion
+        description: "Occasion for the flower order"
+        data_type: varchar
+      - name: promo_code
+        description: "Promotional code used"
+        data_type: varchar
+      - name: discount_amount
+        description: "Discount applied to the order"
+        data_type: decimal
+      - name: order_date
+        description: "Date when the order was placed"
+        data_type: date
+      - name: order_status
+        description: "Status of the order"
+        data_type: varchar

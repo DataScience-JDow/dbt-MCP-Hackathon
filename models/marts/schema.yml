@@ -1,0 +1,268 @@
+version: 2
+
+models:
+  - name: fct_flower_orders
+    description: "Fact table containing all flower order transactions with customer and delivery details"
+    columns:
+      - name: flower_order_id
+        description: "Unique identifier for flower orders"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Name of the customer placing the order"
+        data_type: varchar
+      - name: customer_email
+        description: "Email address of the customer"
+        data_type: varchar
+      - name: customer_phone
+        description: "Phone number of the customer"
+        data_type: varchar
+      - name: arrangement_id
+        description: "Identifier for the flower arrangement"
+        data_type: varchar
+      - name: arrangement_name
+        description: "Name of the flower arrangement"
+        data_type: varchar
+      - name: arrangement_description
+        description: "Description of the flower arrangement"
+        data_type: varchar
+      - name: size_category
+        description: "Size category of the arrangement (small, medium, large)"
+        data_type: varchar
+      - name: occasion_type
+        description: "Type of occasion for the arrangement"
+        data_type: varchar
+      - name: is_custom
+        description: "Whether the arrangement is custom made"
+        data_type: boolean
+      - name: quantity
+        description: "Quantity of arrangements ordered"
+        data_type: integer
+      - name: arrangement_base_price
+        description: "Base price of the arrangement"
+        data_type: decimal
+      - name: total_amount
+        description: "Total amount for the arrangements"
+        data_type: decimal
+      - name: delivery_fee
+        description: "Fee charged for delivery"
+        data_type: decimal
+      - name: discount_amount
+        description: "Discount applied to the order"
+        data_type: decimal
+      - name: final_amount
+        description: "Final amount after delivery fee and discounts"
+        data_type: decimal
+      - name: recipient_name
+        description: "Name of the delivery recipient"
+        data_type: varchar
+      - name: recipient_phone
+        description: "Phone number of the delivery recipient"
+        data_type: varchar
+      - name: delivery_address
+        description: "Street address for delivery"
+        data_type: varchar
+      - name: delivery_city
+        description: "City for delivery"
+        data_type: varchar
+      - name: delivery_state
+        description: "State for delivery"
+        data_type: varchar
+      - name: delivery_zipcode
+        description: "ZIP code for delivery"
+        data_type: varchar
+      - name: delivery_date
+        description: "Date of delivery"
+        data_type: date
+      - name: delivery_time
+        description: "Time of delivery"
+        data_type: time
+      - name: delivery_status
+        description: "Status of the delivery"
+        data_type: varchar
+      - name: occasion
+        description: "Occasion for the flower order"
+        data_type: varchar
+      - name: promo_code
+        description: "Promotional code used"
+        data_type: varchar
+      - name: order_date
+        description: "Date when the order was placed"
+        data_type: date
+      - name: order_status
+        description: "Status of the order"
+        data_type: varchar
+
+  - name: fct_jaffle_orders
+    description: "Fact table containing all jaffle shop order transactions with customer and store details"
+    columns:
+      - name: order_id
+        description: "Unique identifier for orders"
+        data_type: integer
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Identifier for the customer"
+        data_type: integer
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: ordered_at
+        description: "Timestamp when the order was placed"
+        data_type: timestamp
+      - name: store_id
+        description: "Identifier for the store"
+        data_type: integer
+      - name: store_name
+        description: "Name of the store"
+        data_type: varchar
+      - name: store_opened_at
+        description: "Date when the store opened"
+        data_type: date
+      - name: store_tax_rate
+        description: "Tax rate for the store"
+        data_type: decimal
+      - name: product_sku
+        description: "Stock keeping unit for the product"
+        data_type: varchar
+      - name: item_name
+        description: "Name of the item ordered"
+        data_type: varchar
+      - name: item_type
+        description: "Type/category of the item"
+        data_type: varchar
+      - name: item_price
+        description: "Price of the individual item"
+        data_type: decimal
+      - name: subtotal
+        description: "Subtotal before tax"
+        data_type: decimal
+      - name: tax_paid
+        description: "Amount of tax paid"
+        data_type: decimal
+      - name: order_total
+        description: "Total amount for the order"
+        data_type: decimal
+
+  - name: dim_customers
+    description: "Dimension table containing unique customers from both jaffle and flower businesses"
+    columns:
+      - name: customer_key
+        description: "Surrogate key for the customer dimension"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Natural key for the customer (ID for jaffle, email for flower)"
+        data_type: varchar
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: source
+        description: "Source business (jaffle or flower)"
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'flower']
+
+  - name: fct_customer_lifetime_value
+    description: "Customer lifetime value analysis across both businesses"
+    columns:
+      - name: customer_key
+        description: "Surrogate key for the customer"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_id
+        description: "Natural key for the customer"
+        data_type: varchar
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: source
+        description: "Source business (jaffle or flower)"
+        data_type: varchar
+      - name: total_revenue
+        description: "Total revenue generated by the customer"
+        data_type: decimal
+      - name: order_count
+        description: "Total number of orders placed by the customer"
+        data_type: integer
+      - name: avg_order_value
+        description: "Average order value for the customer"
+        data_type: decimal
+      - name: first_order_date
+        description: "Date of the customer's first order"
+        data_type: date
+      - name: last_order_date
+        description: "Date of the customer's most recent order"
+        data_type: date
+      - name: customer_tenure_days
+        description: "Number of days between first and last order"
+        data_type: integer
+
+  - name: fct_cross_business_customers
+    description: "Customers who have made purchases at both jaffle and flower businesses"
+    columns:
+      - name: cross_business_key
+        description: "Surrogate key for cross-business customers"
+        data_type: varchar
+        tests:
+          - unique
+          - not_null
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: jaffle_customer_id
+        description: "Customer ID in the jaffle business"
+        data_type: integer
+      - name: flower_customer_email
+        description: "Customer email in the flower business"
+        data_type: varchar
+      - name: first_jaffle_order
+        description: "Date of first order at jaffle shop"
+        data_type: timestamp
+      - name: first_flower_order
+        description: "Date of first order at flower shop"
+        data_type: date
+      - name: acquisition_source
+        description: "Which business acquired the customer first"
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['jaffle_first', 'flower_first', 'same_day']
+
+  - name: agg_daily_revenue
+    description: "Daily revenue aggregation for both businesses"
+    columns:
+      - name: order_date
+        description: "Date of the orders"
+        data_type: date
+        tests:
+          - not_null
+      - name: business
+        description: "Business name (jaffle or flower)"
+        data_type: varchar
+        tests:
+          - accepted_values:
+              values: ['jaffle', 'flower']
+      - name: revenue
+        description: "Total revenue for the day"
+        data_type: decimal
+      - name: order_count
+        description: "Number of orders for the day"
+        data_type: integer
+      - name: customer_count
+        description: "Number of unique customers for the day"
+        data_type: integer
+      - name: avg_order_value
+        description: "Average order value for the day"
+        data_type: decimal
+      - name: revenue_per_customer
+        description: "Revenue per customer for the day"
+        data_type: decimal

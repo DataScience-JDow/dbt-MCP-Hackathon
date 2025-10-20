@@ -1,0 +1,13 @@
+jaffle_and_flower_shop:
+  target: dev
+  outputs:
+    dev:
+      type: duckdb
+      path: 'jaffle_and_flower_shop.duckdb'
+      threads: 24
+    cloud:
+      type: dbt-cloud
+      account_id: 43791
+      job_id: 345198
+      token: "{{ env_var('DBT_TOKEN') }}"
+      host: "{{ env_var('DBT_HOST') }}"

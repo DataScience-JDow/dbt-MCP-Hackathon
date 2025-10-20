@@ -6,53 +6,169 @@ models:
     columns:
       - name: flower_id
         description: "Unique identifier for flowers"
+        data_type: varchar
         tests:
           - unique
           - not_null
+      - name: flower_name
+        description: "Name of the flower"
+        data_type: varchar
+      - name: flower_type
+        description: "Type/category of the flower"
+        data_type: varchar
+      - name: color
+        description: "Color of the flower"
+        data_type: varchar
+      - name: price_per_stem
+        description: "Price per individual stem"
+        data_type: decimal
+      - name: availability_status
+        description: "Current availability status"
+        data_type: varchar
 
   - name: stg_flower_shop__flower_orders
     description: "Cleaned flower order data"
     columns:
       - name: flower_order_id
         description: "Unique identifier for flower orders"
+        data_type: varchar
         tests:
           - unique
           - not_null
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
+      - name: customer_email
+        description: "Email address of the customer"
+        data_type: varchar
+      - name: customer_phone
+        description: "Phone number of the customer"
+        data_type: varchar
       - name: arrangement_id
         description: "Foreign key to flower arrangements"
+        data_type: varchar
         tests:
           - relationships:
-              arguments:
-                to: ref('stg_flower_shop__flower_arrangements')
-                field: arrangement_id
+              to: ref('stg_flower_shop__flower_arrangements')
+              field: arrangement_id
+      - name: quantity
+        description: "Quantity of arrangements ordered"
+        data_type: integer
+      - name: total_amount
+        description: "Total amount for the arrangements"
+        data_type: decimal
       - name: delivery_id
         description: "Foreign key to delivery information"
+        data_type: varchar
         tests:
           - relationships:
-              arguments:
-                to: ref('stg_flower_shop__delivery_info')
-                field: delivery_id
+              to: ref('stg_flower_shop__delivery_info')
+              field: delivery_id
+      - name: occasion
+        description: "Occasion for the flower order"
+        data_type: varchar
+      - name: promo_code
+        description: "Promotional code used"
+        data_type: varchar
+      - name: discount_amount
+        description: "Discount applied to the order"
+        data_type: decimal
+      - name: order_date
+        description: "Date when the order was placed"
+        data_type: date
+      - name: order_status
+        description: "Status of the order"
+        data_type: varchar
 
   - name: stg_flower_shop__flower_arrangements
     description: "Cleaned flower arrangement data"
     columns:
       - name: arrangement_id
         description: "Unique identifier for arrangements"
+        data_type: varchar
         tests:
           - unique
           - not_null
+      - name: arrangement_name
+        description: "Name of the flower arrangement"
+        data_type: varchar
+      - name: description
+        description: "Description of the arrangement"
+        data_type: varchar
+      - name: base_price
+        description: "Base price of the arrangement"
+        data_type: decimal
+      - name: size_category
+        description: "Size category (small, medium, large)"
+        data_type: varchar
+      - name: occasion_type
+        description: "Type of occasion for the arrangement"
+        data_type: varchar
+      - name: is_custom
+        description: "Whether the arrangement is custom made"
+        data_type: boolean
 
   - name: stg_flower_shop__delivery_info
     description: "Cleaned delivery information data"
     columns:
       - name: delivery_id
         description: "Unique identifier for deliveries"
+        data_type: varchar
         tests:
           - unique
           - not_null
+      - name: delivery_address
+        description: "Street address for delivery"
+        data_type: varchar
+      - name: delivery_city
+        description: "City for delivery"
+        data_type: varchar
+      - name: delivery_state
+        description: "State for delivery"
+        data_type: varchar
+      - name: delivery_zipcode
+        description: "ZIP code for delivery"
+        data_type: varchar
+      - name: delivery_date
+        description: "Date of delivery"
+        data_type: date
+      - name: delivery_time
+        description: "Time of delivery"
+        data_type: time
+      - name: delivery_instructions
+        description: "Special delivery instructions"
+        data_type: varchar
+      - name: delivery_status
+        description: "Status of delivery"
+        data_type: varchar
+      - name: delivery_fee
+        description: "Fee charged for delivery"
+        data_type: decimal
+      - name: recipient_name
+        description: "Name of the delivery recipient"
+        data_type: varchar
+      - name: recipient_phone
+        description: "Phone number of the delivery recipient"
+        data_type: varchar
 
   - name: stg_flower_shop__supplies
     description: "Cleaned supply data"
     columns:
       - name: supply_id
         description: "Supply identifier (may have duplicates)"
+        data_type: varchar
+      - name: supply_name
+        description: "Name of the supply item"
+        data_type: varchar
+      - name: supply_type
+        description: "Type/category of the supply"
+        data_type: varchar
+      - name: quantity_in_stock
+        description: "Current quantity in stock"
+        data_type: integer
+      - name: unit_cost
+        description: "Cost per unit of the supply"
+        data_type: decimal
+      - name: supplier_name
+        description: "Name of the supplier"
+        data_type: varchar

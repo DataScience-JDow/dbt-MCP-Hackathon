@@ -6,58 +6,113 @@ models:
     columns:
       - name: customer_id
         description: "Unique identifier for customers"
+        data_type: integer
         tests:
           - unique
           - not_null
+      - name: customer_name
+        description: "Name of the customer"
+        data_type: varchar
 
   - name: stg_jaffle__orders
     description: "Cleaned order data from jaffle shop"
     columns:
       - name: order_id
         description: "Unique identifier for orders"
+        data_type: integer
         tests:
           - unique
           - not_null
       - name: customer_id
         description: "Foreign key to customers"
+        data_type: integer
         tests:
           - relationships:
-              arguments:
-                to: ref('stg_jaffle__customers')
-                field: customer_id
+              to: ref('stg_jaffle__customers')
+              field: customer_id
+      - name: ordered_at
+        description: "Timestamp when the order was placed"
+        data_type: timestamp
+      - name: store_id
+        description: "Identifier for the store"
+        data_type: integer
+      - name: subtotal
+        description: "Subtotal before tax"
+        data_type: decimal
+      - name: tax_paid
+        description: "Amount of tax paid"
+        data_type: decimal
+      - name: order_total
+        description: "Total amount for the order"
+        data_type: decimal
 
   - name: stg_jaffle__stores
     description: "Cleaned store data from jaffle shop"
     columns:
       - name: store_id
         description: "Unique identifier for stores"
+        data_type: integer
         tests:
           - unique
           - not_null
+      - name: store_name
+        description: "Name of the store"
+        data_type: varchar
+      - name: opened_at
+        description: "Date when the store opened"
+        data_type: date
+      - name: tax_rate
+        description: "Tax rate for the store"
+        data_type: decimal
 
   - name: stg_jaffle__products
     description: "Cleaned product data from jaffle shop"
     columns:
       - name: product_sku
         description: "Unique product SKU"
+        data_type: varchar
         tests:
           - unique
           - not_null
+      - name: product_name
+        description: "Name of the product"
+        data_type: varchar
+      - name: product_type
+        description: "Type/category of the product"
+        data_type: varchar
+      - name: price
+        description: "Price of the product"
+        data_type: decimal
+      - name: description
+        description: "Description of the product"
+        data_type: varchar
 
   - name: stg_jaffle__items
     description: "Cleaned order items data from jaffle shop"
     columns:
       - name: order_id
         description: "Foreign key to orders"
+        data_type: integer
         tests:
           - relationships:
-              arguments:
-                to: ref('stg_jaffle__orders')
-                field: order_id
+              to: ref('stg_jaffle__orders')
+              field: order_id
       - name: product_sku
         description: "Foreign key to products"
+        data_type: varchar
         tests:
           - relationships:
-              arguments:
-                to: ref('stg_jaffle__products')
-                field: product_sku
+              to: ref('stg_jaffle__products')
+              field: product_sku
+      - name: product_name
+        description: "Name of the product"
+        data_type: varchar
+      - name: product_type
+        description: "Type/category of the product"
+        data_type: varchar
+      - name: price
+        description: "Price of the item"
+        data_type: decimal
+      - name: description
+        description: "Description of the item"
+        data_type: varchar
