@@ -19,19 +19,24 @@ from mcp.types import (
 import openai
 from openai import AsyncOpenAI
 
-# Our existing services
+# Our existing services - handle both relative and absolute imports
+import sys
+from pathlib import Path
+
+# Add parent directory to path for imports
+current_dir = Path(__file__).parent
+parent_dir = current_dir.parent
+sys.path.insert(0, str(parent_dir))
+
 try:
+    # Try relative imports first (when used as module)
     from ..config import Config
     from ..shared.models import ModelMetadata, ModelGenerationRequest
     from .model_service import ModelMetadataService
     from .compilation_service import DBTCompilationExecutionService
     from .model_generator import ModelFileManager
-except ImportError:
-    # Fallback for direct execution
-    import sys
-    from pathlib import Path
-    sys.path.insert(0, str(Path(__file__).parent.parent))
-    
+except (ImportError, ValueError):
+    # Fallback to absolute imports (when run directly)
     from config import Config
     from shared.models import ModelMetadata, ModelGenerationRequest
     from backend.model_service import ModelMetadataService
