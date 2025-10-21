@@ -1,77 +1,68 @@
 # 🤖 dbt MCP Hackathon Project
 
-An AI-powered assistant for dbt development that makes model exploration and generation accessible through natural language conversations. Now featuring **real ChatGPT integration** alongside our pattern-based AI system.
+A production-ready AI-powered assistant for dbt development featuring **official MCP server integration** and **real ChatGPT model generation**. Transform natural language into working dbt models instantly.
 
 ## ✨ Features
 
-- **🔍 Model Explorer**: Browse and search your dbt project models with an intuitive interface
-- **🤖 Dual AI System**: Choose between ChatGPT (sophisticated) or pattern-based AI (fast & reliable)
-- **💬 Natural Language**: "Create a customer lifetime value model" → Working dbt SQL
-- **⚡ Real-time Compilation**: Test and run generated models instantly
-- **🔄 Hybrid Approach**: Automatically falls back if ChatGPT is unavailable
-- **📊 Cross-Business Analytics**: Generate models that span multiple data sources
-- **🛠️ Production Ready**: Environment configuration, error handling, and monitoring
+- **🔧 Official MCP Server**: Standards-compliant server for AI agent integration (Claude, ChatGPT, Kiro IDE)
+- **🤖 ChatGPT Integration**: Real AI model generation with comprehensive dbt context (68 models)
+- **💬 Intelligent Chat**: "create a model to show me the total tax_amt for jaffle_orders?" → Working dbt SQL
+- **⚡ Model Explorer**: Browse, compile, and run models with real results and row counts
+- **🔄 Resilient Architecture**: DuckDB connection handling, port conflict resolution, graceful fallbacks
+- **📊 Production Data**: 68 real dbt models across jaffle shop and flower shop businesses
+- **🛠️ Production Ready**: Comprehensive testing, error handling, and deployment options
 
 ## 🚀 Quick Start
 
-### Option 1: Basic Setup (Pattern-Based AI)
+### One-Command Launch
 ```bash
-# 1. Install dependencies
-python install_deps.py
+# 1. Optional: Set up ChatGPT (get key from https://platform.openai.com/api-keys)
+export OPENAI_API_KEY='your-api-key-here'
 
-# 2. Start the application
+# 2. Start everything
 python start_full_app.py
 
-# 3. Open http://localhost:8501
+# 3. Open http://localhost:8502
 ```
 
-### Option 2: Full Setup (With ChatGPT)
+### Alternative: Guided Setup
 ```bash
-# 1. Get OpenAI API key from https://platform.openai.com/api-keys
-# 2. Create .env file
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-
-# 3. Test ChatGPT integration
-python test_chatgpt_integration.py
-
-# 4. Start the application
-python start_full_app.py
-
-# 5. Open http://localhost:8501
+# Interactive startup with options
+python start_app_simple.py
 ```
 
 ### 🔗 Access Points
-- **Frontend**: http://localhost:8501
-- **Backend API**: http://localhost:8000
-- **API Documentation**: http://localhost:8000/docs
-- **AI Status**: http://localhost:8000/ai-status
+- **Frontend**: http://localhost:8502
+- **Backend API**: http://localhost:8001
+- **API Documentation**: http://localhost:8001/docs
+- **AI Status**: http://localhost:8001/ai-status
 
 ### 🩺 Health Check
 ```bash
-python health_check.py
+cd dbt_mcp_hackathon_project
+python run_tests.py
 ```
 
 ## 🤖 AI Capabilities
 
-### ChatGPT Integration (Recommended)
-- **Sophisticated SQL Generation**: Context-aware, follows dbt best practices
-- **Natural Language Understanding**: Handles complex, multi-step requests
-- **Business Logic**: Understands analytics patterns and metrics
+### ChatGPT Integration (Production Ready)
+- **Comprehensive dbt Context**: Full access to 68 models, relationships, and metadata
+- **Real-time Generation**: Instant model creation directly in chat interface
+- **Production SQL**: Proper {{ ref() }} syntax, dbt best practices, business logic
 - **Cost**: ~$0.01-0.05 per request
 
-### Pattern-Based AI (Fallback)
-- **Fast & Reliable**: <200ms response time, always available
-- **Template-Driven**: Good for common dbt patterns
-- **No API Dependencies**: Works offline, no costs
-- **Predictable**: Consistent results for demos
+### Pattern-Based AI (Intelligent Fallback)
+- **Zero Latency**: <200ms response time, always available
+- **Reliable**: Works offline, no API dependencies or costs
+- **Smart Routing**: Automatically used when ChatGPT unavailable
 
-## 📊 Sample Data
+## 📊 Production Data
 
-This project includes two sample businesses:
+This project includes comprehensive sample data:
 - **Jaffle Shop**: Coffee business with customers, orders, products, and stores
 - **Flower Shop**: Flower delivery with arrangements, orders, and delivery data
 
-The dbt project contains 19 pre-built models across staging, intermediate, and mart layers.
+The dbt project contains **68 production models** across staging, intermediate, and mart layers with full lineage and documentation.
 
 ## 📚 Documentation
 
@@ -81,34 +72,43 @@ The dbt project contains 19 pre-built models across staging, intermediate, and m
 
 ## 🎯 Example Prompts
 
-Try these in the chat interface:
+Try these in the chat interface (http://localhost:8502):
 
 ```
-"Create a customer lifetime value model"
-"Build a daily revenue analysis combining both businesses"
-"Generate a product performance model with monthly trends"
-"Create a customer segmentation based on purchase behavior"
+"create a model to show me the total tax_amt for jaffle_orders?"
+"build a customer lifetime value model with total orders and revenue"
+"generate a daily revenue analysis combining both businesses"
+"show me all customer-related models in my project"
 ```
 
-## 🛠️ Development
+## 🛠️ Development & Integration
 
 ### Testing
 ```bash
-# Test ChatGPT integration
-python test_chatgpt_integration.py
+# Comprehensive test suite
+cd dbt_mcp_hackathon_project
+python run_tests.py
 
-# Test overall health
-python health_check.py
+# Test MCP server
+python test_mcp_client.py
 ```
 
-### API Endpoints
-- `POST /generate` - Auto-selects best AI
-- `POST /generate-chatgpt` - ChatGPT only
-- `POST /generate-pattern` - Pattern-based only
+### MCP Server (For AI Agents)
+```bash
+# Start MCP server for Claude, ChatGPT, Kiro IDE
+cd dbt_mcp_hackathon_project
+python mcp_main.py
+```
+
+### API Endpoints (Legacy)
+- `POST /generate` - Auto-selects best AI (port 8001)
 - `GET /ai-status` - Check AI service availability
+- `GET /models` - List all dbt models
+- `POST /compile` - Compile dbt models
+- `POST /run` - Execute dbt models
 
 ---
 
 *Built with ❤️ for the Coalesce 2025 MCP Hackathon*
 
-**🌟 Now featuring real AI integration - the future of dbt development is conversational!**
+**🏆 Production-ready with official MCP server, real ChatGPT integration, and 68 working dbt models - the future of dbt development is here!**

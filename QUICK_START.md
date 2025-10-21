@@ -1,36 +1,37 @@
 # ⚡ Quick Start Guide
 
-Get up and running with the dbt MCP Hackathon Project in under 5 minutes!
+Get up and running with the dbt MCP Hackathon Project in under 2 minutes!
 
-## 🎯 Choose Your Experience
+## 🚀 One-Command Start
 
 ### 🤖 Full AI Experience (Recommended)
-Get the best results with ChatGPT integration.
-
 ```bash
-# 1. Get OpenAI API key
-# Visit: https://platform.openai.com/api-keys
+# 1. Get OpenAI API key from https://platform.openai.com/api-keys
+# 2. Set environment variable
+export OPENAI_API_KEY='your-api-key-here'
 
-# 2. Configure environment
-echo "OPENAI_API_KEY=your-api-key-here" > .env
-
-# 3. Test ChatGPT integration
-python test_chatgpt_integration.py
-
-# 4. Launch application
+# 3. Launch everything
 python start_full_app.py
 
-# 5. Open http://localhost:8501
+# 4. Open http://localhost:8502
 ```
 
 ### ⚡ Fast & Reliable (No API Required)
-Use pattern-based AI for instant, reliable results.
-
 ```bash
-# 1. Launch application
+# 1. Launch application (uses pattern-based AI fallback)
 python start_full_app.py
 
-# 2. Open http://localhost:8501
+# 2. Open http://localhost:8502
+```
+
+## 🧪 Alternative: Step-by-Step
+```bash
+# Option 1: Use the guided startup
+python start_app_simple.py
+
+# Option 2: Test everything first
+cd dbt_mcp_hackathon_project
+python run_tests.py
 ```
 
 ## 🧪 Test It Out
@@ -42,9 +43,9 @@ Once the app is running, try these prompts in the chat interface:
 - "Create a simple revenue analysis"
 
 ### Complex Requests (ChatGPT shines here!)
-- "Build a customer lifetime value model that includes total orders, revenue, and average order value"
-- "Create a daily revenue analysis combining both jaffle shop and flower shop data"
-- "Generate a customer segmentation model based on purchase behavior and frequency"
+- "create a model to show me the total tax_amt for jaffle_orders?"
+- "build a customer lifetime value model that includes total orders, revenue, and average order value"
+- "generate a daily revenue analysis combining both jaffle shop and flower shop data"
 
 ## 🔍 What You'll See
 
@@ -62,10 +63,11 @@ Once the app is running, try these prompts in the chat interface:
 
 ## 🌐 Access Points
 
-- **Main App**: http://localhost:8501
-- **API Docs**: http://localhost:8000/docs
-- **AI Status**: http://localhost:8000/ai-status
-- **Health Check**: http://localhost:8000/health
+- **Main App**: http://localhost:8502
+- **Backend API**: http://localhost:8001
+- **API Docs**: http://localhost:8001/docs
+- **AI Status**: http://localhost:8001/ai-status
+- **Health Check**: http://localhost:8001/health
 
 ## 🆘 Need Help?
 

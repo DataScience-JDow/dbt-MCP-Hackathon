@@ -1,33 +1,32 @@
 # 🚀 dbt MCP Hackathon Project Full Application Guide
 
-*Now featuring real ChatGPT integration alongside pattern-based AI!*
+*Production-ready with official MCP server and ChatGPT integration!*
 
-## Quick Start Options
+## 🎯 What You Get
 
-### Option A: With ChatGPT (Recommended)
-For the full AI experience with sophisticated model generation.
+- **Official MCP Server**: Standards-compliant for AI agent integration
+- **ChatGPT Integration**: Real AI model generation with comprehensive dbt context
+- **Intelligent Streamlit Frontend**: Single-file app with working chat interface
+- **68 dbt Models**: Complete jaffle shop and flower shop analytics
+- **Production Features**: Error handling, connection resilience, comprehensive testing
 
-### Option B: Pattern-Based Only
-For reliable, fast generation without external API dependencies.
+## ⚡ Quick Start
 
-### 1. Install Dependencies
-```bash
-python install_deps.py
-```
-
-### 2. Start Full Application
+### 1. Start Full Application
 ```bash
 python start_full_app.py
 ```
 
-### 3. Verify Everything Works
+### 2. Verify Everything Works
 ```bash
-python health_check.py
+cd dbt_mcp_hackathon_project
+python run_tests.py
 ```
 
-### 4. Open the App
-- **Frontend:** http://localhost:8501
-- **Backend API:** http://localhost:8000/docs
+### 3. Open the App
+- **Frontend:** http://localhost:8502
+- **Backend API:** http://localhost:8001
+- **API Docs:** http://localhost:8001/docs
 
 ---
 
@@ -46,7 +45,8 @@ pip install dbt-core dbt-duckdb
 echo "OPENAI_API_KEY=your-api-key-here" > .env
 
 # Test integration
-python test_chatgpt_integration.py
+cd dbt_mcp_hackathon_project
+python run_tests.py
 ```
 
 ### Step 2: Setup dbt Profile
@@ -69,12 +69,13 @@ dbt compile
 ### Step 4: Start Backend (Terminal 1)
 ```bash
 cd dbt_mcp_hackathon_project
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+python -c "import sys; from pathlib import Path; sys.path.insert(0, str(Path.cwd().parent)); from dbt_mcp_hackathon_project.backend.mcp_server import MCPServer; import uvicorn; mcp_server = MCPServer(); app = mcp_server.get_app(); uvicorn.run(app, host='127.0.0.1', port=8001)"
 ```
 
 ### Step 5: Start Frontend (Terminal 2)
 ```bash
-streamlit run dbt_mcp_hackathon_project/frontend/app.py --server.port 8501
+cd dbt_mcp_hackathon_project
+streamlit run full_app.py --server.port 8502
 ```
 
 ---
@@ -83,27 +84,27 @@ streamlit run dbt_mcp_hackathon_project/frontend/app.py --server.port 8501
 
 ### What You Can Do:
 1. **Natural Language Prompts:**
-   - "Create a customer analysis model"
-   - "Show monthly revenue trends"
-   - "Find customers who shop at both businesses"
+   - "create a model to show me the total tax_amt for jaffle_orders?"
+   - "build a customer lifetime value model"
+   - "generate a daily revenue analysis combining both businesses"
 
 2. **Real SQL Generation:**
-   - AI generates actual dbt SQL code
-   - Uses your existing models as references
-   - Follows dbt best practices
+   - ChatGPT generates production-ready dbt SQL code
+   - Uses your existing 68 models as references
+   - Follows dbt best practices with proper {{ ref() }} syntax
 
 3. **Instant Testing:**
-   - Compile generated models
-   - Run them against your data
-   - See results immediately
+   - Compile generated models in Model Explorer
+   - Run them against your DuckDB data
+   - See actual results and row counts
 
 ### Example Workflow:
-1. Go to Chat Interface
-2. Type: "Create a model showing total orders per customer"
-3. AI generates SQL code
-4. Click "Compile Model" to test
-5. Click "Run Model" to execute
-6. View results in the interface
+1. Go to Chat Interface (http://localhost:8502)
+2. Type: "create a model to show me the total tax_amt for jaffle_orders?"
+3. ChatGPT generates complete dbt SQL with explanation
+4. Copy SQL or go to Model Explorer
+5. Use Compile/Run buttons to test existing models
+6. View actual data results
 
 ---
 
@@ -111,20 +112,22 @@ streamlit run dbt_mcp_hackathon_project/frontend/app.py --server.port 8501
 
 ### Backend Won't Start
 ```bash
-# Check if port 8000 is in use
-netstat -an | grep 8000
+# Check if port 8001 is in use
+netstat -an | grep 8001
 
-# Try different port
-python -m uvicorn dbt_mcp_hackathon_project.main:app --port 8001
+# Use the simple startup script
+python start_app_simple.py
+# Choose option 1 to start backend only
 ```
 
 ### Frontend Issues
 ```bash
-# Check if port 8501 is in use
-netstat -an | grep 8501
+# Check if port 8502 is in use
+netstat -an | grep 8502
 
-# Try different port
-streamlit run dbt_mcp_hackathon_project/frontend/app.py --server.port 8502
+# Use the simple startup script
+python start_app_simple.py
+# Choose option 2 to start frontend only
 ```
 
 ### dbt Compilation Errors
@@ -142,25 +145,26 @@ dbt compile
 
 ### AI Generation Not Working
 - Check backend logs for errors
-- Verify MCP server is running (http://localhost:8000/health)
-- The AI service uses mock generation by default
-- For real AI, you'd need to configure OpenAI API key
+- Verify MCP server is running (http://localhost:8001/health)
+- Check if ChatGPT is available (http://localhost:8001/ai-status)
+- Ensure OPENAI_API_KEY environment variable is set
+- The system automatically falls back to pattern-based AI if ChatGPT unavailable
 
 ---
 
 ## 🎯 Demo Features
 
 ### Model Explorer
-- Browse all 19 models from your dbt project
-- Search and filter functionality
-- View model dependencies and lineage
-- Real-time model metadata
+- Browse all 68 models from your dbt project
+- Search and filter functionality with real-time results
+- Compile and run models directly in the interface
+- View actual execution results and row counts
 
 ### AI Chat Interface
-- Natural language model generation
-- Example prompts for common scenarios
-- SQL code preview and editing
-- Compile and run capabilities
+- Real-time ChatGPT model generation
+- Intelligent responses using actual project data
+- Complete dbt SQL with explanations and next steps
+- Context-aware suggestions and help
 
 ### Cross-Business Analytics
 - Generate models that join jaffle shop + flower shop data
@@ -176,24 +180,29 @@ Once running, you can also use the API directly:
 
 ### Health Check
 ```bash
-curl http://localhost:8000/health
+curl http://localhost:8001/health
 ```
 
 ### List Models
 ```bash
-curl http://localhost:8000/models
+curl http://localhost:8001/models
 ```
 
 ### Generate Model
 ```bash
-curl -X POST http://localhost:8000/generate \
+curl -X POST http://localhost:8001/generate \
   -H "Content-Type: application/json" \
   -d '{"prompt": "Create customer analysis model", "materialization": "view"}'
 ```
 
 ### Compile Model
 ```bash
-curl -X POST http://localhost:8000/compile/model_name
+curl -X POST "http://localhost:8001/compile?model_name=fct_jaffle_orders"
+```
+
+### Run Model
+```bash
+curl -X POST "http://localhost:8001/run?model_name=fct_jaffle_orders"
 ```
 
 ---
@@ -202,11 +211,11 @@ curl -X POST http://localhost:8000/compile/model_name
 
 You'll know everything is working when:
 
-1. ✅ Backend health check returns status "healthy"
-2. ✅ Frontend loads at http://localhost:8501
-3. ✅ Model Explorer shows your 19 dbt models
-4. ✅ Chat Interface accepts prompts and generates SQL
-5. ✅ You can compile and run generated models
+1. ✅ Backend health check returns status "healthy" (http://localhost:8001/health)
+2. ✅ Frontend loads at http://localhost:8502 with "Backend connected and ready"
+3. ✅ Model Explorer shows your 68 dbt models with search and filtering
+4. ✅ Chat Interface generates actual SQL from natural language prompts
+5. ✅ You can compile and run models with real results and row counts
 
 ---
 
