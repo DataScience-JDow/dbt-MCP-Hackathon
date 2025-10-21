@@ -429,22 +429,6 @@ python test_mcp_client.py
 ### Kiro IDE Integration
 The MCP server is pre-configured in `.kiro/settings/mcp.json`. Just ensure your `OPENAI_API_KEY` environment variable is set.
 
-## 🔮 What's Next: Production Roadmap
-
-### Immediate Enhancements (Next Sprint)
-- **Enhanced Model Types**: Support for dbt tests, macros, snapshots, and seeds
-- **Advanced Visualizations**: Interactive model lineage graphs and data profiling
-- **Streaming AI Responses**: Real-time model generation with progress indicators
-- **Multi-Model Conversations**: Handle complex requests spanning multiple models and dependencies
-- **Cloud Integration**: dbt Cloud API integration for remote project management
-
-### Future Vision (Next Quarter)
-- **Multi-Project Support**: Manage and generate models across multiple dbt projects
-- **Team Collaboration**: Share generated models, chat sessions, and AI insights
-- **Advanced AI Features**: Model optimization suggestions, performance analysis, and automated testing
-- **Enterprise Deployment**: Docker containers, Kubernetes support, and cloud-native architecture
-- **MCP Ecosystem**: Integration with emerging MCP tools and AI agent platforms
-
 ### The Big Picture
 This project demonstrates that AI-powered dbt development is not just possible - it's the future. We built a production-ready foundation that scales from individual developers to enterprise teams.
 
