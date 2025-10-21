@@ -683,11 +683,18 @@ class MCPServer:
     def _connect_database(self):
         """Connect to DuckDB database"""
         try:
+            # Try to connect to DuckDB
             self.db_connection = duckdb.connect(str(self.config.DUCKDB_PATH))
             logger.info(f"Connected to DuckDB: {self.config.DUCKDB_PATH}")
         except Exception as e:
-            logger.error(f"Failed to connect to DuckDB: {e}")
-            raise
+            if "already open" in str(e) or "being used by another process" in str(e):
+                logger.warning(f"DuckDB file is in use by another process. Using in-memory connection for this instance.")
+                # Use in-memory database as fallback
+                self.db_connection = duckdb.connect(":memory:")
+                logger.info("Connected to DuckDB in-memory database (fallback)")
+            else:
+                logger.error(f"Failed to connect to DuckDB: {e}")
+                raise
     
     def _load_dbt_manifest(self):
         """Load dbt manifest.json file"""

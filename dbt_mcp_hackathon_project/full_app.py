@@ -69,7 +69,7 @@ if 'models_cache' not in st.session_state:
 if 'chat_history' not in st.session_state:
     st.session_state.chat_history = []
 if 'backend_url' not in st.session_state:
-    st.session_state.backend_url = "http://localhost:8000"
+    st.session_state.backend_url = "http://localhost:8001"
 
 def check_backend_connection():
     """Check if backend is connected"""
@@ -143,9 +143,15 @@ def compile_model(model_name: str):
         if response.status_code == 200:
             return response.json()
         else:
-            return {"success": False, "error": f"HTTP {response.status_code}"}
+            # Get more detailed error information
+            try:
+                error_detail = response.json()
+                error_msg = error_detail.get('detail', f"HTTP {response.status_code}")
+            except:
+                error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
+            return {"success": False, "error": error_msg}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        return {"success": False, "error": f"Request failed: {str(e)}"}
 
 def run_model(model_name: str, with_dependencies: bool = False):
     """Run a model"""
@@ -158,9 +164,15 @@ def run_model(model_name: str, with_dependencies: bool = False):
         if response.status_code == 200:
             return response.json()
         else:
-            return {"success": False, "error": f"HTTP {response.status_code}"}
+            # Get more detailed error information
+            try:
+                error_detail = response.json()
+                error_msg = error_detail.get('detail', f"HTTP {response.status_code}")
+            except:
+                error_msg = f"HTTP {response.status_code}: {response.text[:200]}"
+            return {"success": False, "error": error_msg}
     except Exception as e:
-        return {"success": False, "error": str(e)}
+        return {"success": False, "error": f"Request failed: {str(e)}"}
 
 def search_models(query: str):
     """Search models by name or description"""

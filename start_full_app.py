@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
 Start the full dbt MCP Hackathon Project application
+Fixed version that uses working components
 """
 import subprocess
 import sys
@@ -12,40 +13,42 @@ def start_backend():
     """Start the FastAPI backend"""
     print("🚀 Starting FastAPI backend...")
     
+    # Change to the correct directory
+    backend_dir = Path("dbt_mcp_hackathon_project")
+    
     backend_cmd = [
         sys.executable, "-c", 
         """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path.cwd()))
+sys.path.insert(0, str(Path.cwd().parent))
 from dbt_mcp_hackathon_project.backend.mcp_server import MCPServer
 import uvicorn
 
 mcp_server = MCPServer()
 app = mcp_server.get_app()
-uvicorn.run(app, host="0.0.0.0", port=8000)
+uvicorn.run(app, host="127.0.0.1", port=8001)
         """
     ]
     
-    backend_process = subprocess.Popen(backend_cmd, cwd=".")
+    backend_process = subprocess.Popen(backend_cmd, cwd=str(backend_dir))
     return backend_process
 
 def start_frontend():
     """Start the Streamlit frontend"""
     print("🎨 Starting Streamlit frontend...")
     
+    # Use the working single-file frontend
+    frontend_dir = Path("dbt_mcp_hackathon_project")
+    
     frontend_cmd = [
         sys.executable, "-m", "streamlit", "run", 
-        "dbt_mcp_hackathon_project/frontend/app.py",
-        "--server.port", "8501",
+        "full_app.py",
+        "--server.port", "8502",
         "--server.headless", "true"
     ]
     
-    # Set environment variables for better import handling
-    env = os.environ.copy()
-    env["PYTHONPATH"] = str(Path.cwd())
-    
-    frontend_process = subprocess.Popen(frontend_cmd, cwd=".", env=env)
+    frontend_process = subprocess.Popen(frontend_cmd, cwd=str(frontend_dir))
     return frontend_process
 
 def main():
@@ -66,8 +69,9 @@ def main():
         
         print("\n" + "=" * 60)
         print("🎉 Full Application Ready!")
-        print("📊 Backend API: http://localhost:8000")
-        print("🎨 Frontend UI: http://localhost:8501")
+        print("📊 Backend API: http://localhost:8001")
+        print("🎨 Frontend UI: http://localhost:8502")
+        print("📚 API Docs: http://localhost:8001/docs")
         print("=" * 60)
         print("\nPress Ctrl+C to stop both services")
         
